@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sawubona World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --sa-red: #E03C31;
+            --sa-blue: #001489;
+            --sa-green: #007749;
+            --sa-gold: #FFB81C;
+            --sa-black: #000000;
+            --sa-white: #FFFFFF;
+            --bg-color: #fafafa;
+            --text-main: var(--sa-black);
+            --text-secondary: #444444;
+            --accent: var(--sa-gold);
+            --transition-speed: 0.6s;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(135deg, rgba(224, 60, 49, 0.05) 0%, transparent 25%),
+                linear-gradient(225deg, rgba(0, 20, 137, 0.05) 0%, transparent 25%),
+                linear-gradient(45deg, rgba(0, 119, 73, 0.05) 0%, transparent 25%);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, var(--sa-gold) 0%, transparent 1%),
+                radial-gradient(circle at 80% 20%, var(--sa-green) 0%, transparent 1%);
+            background-size: 100px 100px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        main { padding: 2rem; text-align: center; max-width: 800px; width: 100%; position: relative; }
+        .content-wrapper { position: relative; z-index: 1; }
+        h1 {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.5rem;
+            color: var(--sa-black);
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+        .mzansi-flag-line {
+            height: 6px; width: 80px;
+            background: linear-gradient(to right, var(--sa-red), var(--sa-white), var(--sa-green), var(--sa-white), var(--sa-blue));
+            margin: 1.5rem auto;
+            border-radius: 3px;
+        }
+        p {
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .dot {
+            color: var(--sa-green);
+            display: inline-block;
+            text-shadow: 2px 2px 0px var(--sa-gold);
+        }
+        .content-wrapper:hover h1 {
+            transform: scale(1.02);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .content-wrapper:hover .mzansi-flag-line {
+            width: 120px;
+            transition: width 0.6s ease;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .content-wrapper, h1, p, .mzansi-flag-line {
+                animation: none !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <article class="content-wrapper" id="entry-content">
+            <h1 id="title">Sawubona, World<span class="dot">!</span></h1>
+            <div class="mzansi-flag-line" id="line"></div>
+            <p id="subtitle">A greeting from Mzansi 🇿🇦</p>
+        </article>
+    </main>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.5 } });
+            tl.from("#title", { y: 50, opacity: 0, scale: 0.9, delay: 0.3 })
+              .from("#line", { width: 0, opacity: 0, duration: 1 }, "-=1")
+              .from("#subtitle", { y: 20, opacity: 0 }, "-=1.2")
+              .from(".dot", { scale: 0, rotation: 180, duration: 0.8, ease: "back.out(2)" }, "-=0.8");
+        });
+    </script>
+</body>
+</html>
