@@ -1,0 +1,51 @@
+name: Deploy to here.now
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to here.now
+        run: |
+          # Step 1: Create deployment
+          echo "Creating here.now deployment..."
+          PUBLISH_RESPONSE=$(curl -sf -X POST "https://here.now/api/v1/publish" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "files": [
+                {
+                  "path": "index.html",
+                  "contentType": "text/html",
+                  "size": '"$(wc -c < index.html)"'
+                }
+              ]
+            }')
+
+          SLUG=$(echo "$PUBLISH_RESPONSE" | jq -r '.slug')
+          VERSION_ID=$(echo "$PUBLISH_RESPONSE" | jq -r '.upload.versionId')
+          UPLOAD_URL=$(echo "$PUBLISH_RESPONSE" | jq -r '.upload.uploads[0].url')
+          FINALIZE_URL=$(echo "$PUBLISH_RESPONSE" | jq -r '.upload.finalizeUrl')
+          SITE_URL=$(echo "$PUBLISH_RESPONSE" | jq -r '.siteUrl')
+
+          echo "Slug: $SLUG"
+          echo "Version: $VERSION_ID"
+
+          # Step 2: Upload index.html
+          echo "Uploading index.html..."
+          curl -sf -X PUT "$UPLOAD_URL" \
+            -H "Content-Type: text/html" \
+            --data-binary @index.html
+
+          # Step 3: Finalize
+          echo "Finalizing deployment..."
+          curl -sf -X POST "$FINALIZE_URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"versionId\": \"$VERSION_ID\"}"
+
+          echo ""
+          echo "✅ Deployed to: $SITE_URL"
